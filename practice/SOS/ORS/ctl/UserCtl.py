@@ -28,10 +28,6 @@ class UserCtl:
         s = self.form_to_model(User())
         UserService().save(s)
 
-    def search(self):
-        res = UserService().search()
-        return res
-
     def edit(self, id):
         res = UserService().edit(id)
         return res

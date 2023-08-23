@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .ctl.UserCtl import UserCtl
 from .ctl.LoginCtl import LoginCtl
+from .ctl.UserListCtl import UserListCtl
 
 
 def index(request):
@@ -38,10 +39,20 @@ def logout(request):
 
 
 def userList(request):
-    res = UserCtl().search()
-    return render(request, "UserList.html", {"list": res['data']})
+    if request.method == 'POST':
+        if request.POST["operation"] =="next":
+            return UserListCtl().next(request)
+        if request.POST["operation"] =="previous":
+            return UserListCtl().previous(request)
+        if request.POST["operation"] =="search":
+            return UserListCtl().search(request)
+        if request.POST["operation"] =="add":
+            return redirect('/ORS/Register')
+        if request.POST["operation"] =="delete":
+            return UserListCtl().delete(request)
+    return  UserListCtl().search(request)
 
 
 def display(request, id=0):
     data = UserCtl().edit(int(id))
-    return render(request, "UpdateUser.html", {"data":data})
+    return render(request, "UpdateUser.html", {"data": data})

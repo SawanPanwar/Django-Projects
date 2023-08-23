@@ -20,17 +20,23 @@ class UserService:
         else:
             return None
 
-    def search(self):
-        sql = "select * from sos_user"
+    def search(self, params):
+        pageNo = (params["pageNo"] - 1) * 5
+        print("pageNo ======>>>>>>>", pageNo)
+        val = params.get("firstName", "")
+        sql = "select * from sos_user where 1=1"
+        if val != "":
+            sql += " and firstName like '" + val + "%%' "
+        sql += " limit %s, %s"
+        print("sql ======>>>>>>", sql)
         cursor = connection.cursor()
-        cursor.execute(sql)
+        cursor.execute(sql, [pageNo, 5])
         result = cursor.fetchall()
         columnName = ("id", "firstName", "lastName", "loginId", "password")
         res = {
             "data": []
         }
         for x in result:
-            print(x)
             print({columnName[i]: x[i] for i, _ in enumerate(x)})
             res["data"].append({columnName[i]: x[i] for i, _ in enumerate(x)})
         return res
@@ -43,3 +49,10 @@ class UserService:
             return userList[0]
         else:
             return None
+
+    def get(self, id):
+        r = User.objects.get(id = id)
+        return r
+
+    def delete(self, id):
+        id.delete()
