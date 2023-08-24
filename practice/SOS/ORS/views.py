@@ -8,6 +8,10 @@ def index(request):
     return render(request, 'index.html')
 
 
+def welcome(request):
+    return render(request, 'Welcome.html')
+
+
 def registration(request):
     if request.method == 'POST':
         UserCtl().submit(request)
@@ -28,29 +32,29 @@ def login(request):
                 return render(request, "LoginView.html", {"msg": msg})
             else:
                 request.session["user"] = user
-                return redirect('/ORS/UserList')
+                return redirect('/ORS/Welcome')
     return render(request, "LoginView.html")
 
 
 def logout(request):
     request.session['user'] = None
-    res = render(request, "LoginView.html")
+    res = redirect('/ORS/Login')
     return res
 
 
 def userList(request):
     if request.method == 'POST':
-        if request.POST["operation"] =="next":
+        if request.POST["operation"] == "next":
             return UserListCtl().next(request)
-        if request.POST["operation"] =="previous":
+        if request.POST["operation"] == "previous":
             return UserListCtl().previous(request)
-        if request.POST["operation"] =="search":
+        if request.POST["operation"] == "search":
             return UserListCtl().search(request)
-        if request.POST["operation"] =="add":
+        if request.POST["operation"] == "add":
             return redirect('/ORS/Register')
-        if request.POST["operation"] =="delete":
+        if request.POST["operation"] == "delete":
             return UserListCtl().delete(request)
-    return  UserListCtl().search(request)
+    return UserListCtl().search(request)
 
 
 def display(request, id=0):

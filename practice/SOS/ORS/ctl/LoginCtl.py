@@ -1,8 +1,9 @@
 from ..models import User
 from ..service.UserService import UserService
+from .BaseCtl import BaseCtl
 
 
-class LoginCtl:
+class LoginCtl(BaseCtl):
     def __init__(self):
         self.form = {}
 

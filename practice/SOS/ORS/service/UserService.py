@@ -23,10 +23,13 @@ class UserService:
     def search(self, params):
         pageNo = (params["pageNo"] - 1) * 5
         print("pageNo ======>>>>>>>", pageNo)
-        val = params.get("firstName", "")
+        val1 = params.get("firstName", "")
+        val2 = params.get("lastName", "")
         sql = "select * from sos_user where 1=1"
-        if val != "":
-            sql += " and firstName like '" + val + "%%' "
+        if val1 != "":
+            sql += " and firstName like '" + val1 + "%%' "
+        if val2 != "":
+            sql += " and lastName like '" + val2 + "%%' "
         sql += " limit %s, %s"
         print("sql ======>>>>>>", sql)
         cursor = connection.cursor()
@@ -54,5 +57,5 @@ class UserService:
         r = User.objects.get(id = id)
         return r
 
-    def delete(self, id):
-        id.delete()
+    def delete(self, obj):
+        obj.delete()

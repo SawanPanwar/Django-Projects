@@ -1,8 +1,9 @@
 from ..service.UserService import UserService
 from django.shortcuts import render, redirect
+from .BaseCtl import BaseCtl
 
 
-class UserListCtl:
+class UserListCtl(BaseCtl):
     count = 1
 
     def __init__(self):
@@ -16,6 +17,7 @@ class UserListCtl:
     def search(self, request):
         if request.method == 'POST':
             self.form['firstName'] = request.POST["firstName"]
+            self.form['lastName'] = request.POST["lastName"]
         record = UserService().search(self.form)
         data = record['data']
         res = render(request, "UserList.html", {"list": data, 'form': self.form})
