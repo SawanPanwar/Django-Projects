@@ -1,62 +1,30 @@
 from django.shortcuts import render, redirect
-from .ctl.UserCtl import UserCtl
+from .ctl.WelcomeCtl import WelcomeCtl
 from .ctl.LoginCtl import LoginCtl
+from .ctl.UserCtl import UserCtl
 from .ctl.UserListCtl import UserListCtl
+from .ctl.LogoutCtl import LogoutCtl
 
 
 def index(request):
     return render(request, 'index.html')
 
 
-def welcome(request):
-    return render(request, 'Welcome.html')
-
-
-def registration(request):
-    if request.method == 'POST':
-        UserCtl().submit(request)
-        if request.POST["operation"] == "Update":
-            return redirect('/ORS/UserList')
-    return render(request, 'Registration.html')
-
-
-def login(request):
-    if request.method == 'POST':
-        if request.POST["operation"] == "SignUp":
-            return redirect('/ORS/Register')
-        if request.POST["operation"] == "SignIn":
-            user = LoginCtl().authenticate(request)
-            print('---------->>>>>', user)
-            if (user is None):
-                msg = "Invalid ID or Password"
-                return render(request, "LoginView.html", {"msg": msg})
-            else:
-                request.session["user"] = user
-                return redirect('/ORS/Welcome')
-    return render(request, "LoginView.html")
-
-
-def logout(request):
-    request.session['user'] = None
-    res = redirect('/ORS/Login')
+def action(request, page=""):
+    if request.session.get('user') is not None and page != "":
+        ctlName = page + "Ctl()"
+        ctlObj = eval(ctlName)
+        res = ctlObj.execute(request)
+    elif page == "User":
+        ctlName = "User" + "Ctl()"
+        ctlObj = eval(ctlName)
+        res = ctlObj.execute(request)
+    elif page == "Welcome":
+        ctlName = "Welcome" + "Ctl()"
+        ctlObj = eval(ctlName)
+        res = ctlObj.execute(request)
+    else:
+        ctlName = "Login" + "Ctl()"
+        ctlObj = eval(ctlName)
+        res = ctlObj.execute(request)
     return res
-
-
-def userList(request):
-    if request.method == 'POST':
-        if request.POST["operation"] == "next":
-            return UserListCtl().next(request)
-        if request.POST["operation"] == "previous":
-            return UserListCtl().previous(request)
-        if request.POST["operation"] == "search":
-            return UserListCtl().search(request)
-        if request.POST["operation"] == "add":
-            return redirect('/ORS/Register')
-        if request.POST["operation"] == "delete":
-            return UserListCtl().delete(request)
-    return UserListCtl().search(request)
-
-
-def display(request, id=0):
-    data = UserCtl().edit(int(id))
-    return render(request, "UpdateUser.html", {"data": data})

@@ -1,11 +1,38 @@
 from django.shortcuts import render, redirect
-class BaseCtl:
-    def execute(self, request):
-        path = request.META.get("PATH_INFO")
-        print("in execute method....!!!!", path)
-        if request.session.get('user') == None :
-            print("in ifffffffffffff session none")
-            return redirect('/ORS/Login')
-        else:
-            return redirect(path)
+from abc import ABC, abstractmethod
 
+
+class BaseCtl(ABC):
+
+    @abstractmethod
+    def display(self, request):
+        pass
+
+    @abstractmethod
+    def submit(self, request):
+        pass
+
+    def execute(self, request):
+        if "GET" == request.method:
+            return self.display(request)
+        elif "POST" == request.method:
+            if request.POST["operation"] == "delete":
+                return self.delete(request)
+            elif request.POST["operation"] == "next":
+                return self.next(request)
+            elif request.POST["operation"] == "previous":
+                return self.previous(request)
+            elif request.POST["operation"] == "add":
+                return self.add(request)
+            elif request.POST["operation"] == "SignUp":
+                return self.signUp(request)
+            else:
+                return self.submit(request)
+
+    @abstractmethod
+    def get_service(self):
+        pass
+
+    @abstractmethod
+    def get_template(self):
+        pass
