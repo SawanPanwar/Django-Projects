@@ -12,8 +12,10 @@ class BaseCtl(ABC):
     def submit(self, request):
         pass
 
-    def execute(self, request):
+    def execute(self, request, operation="", id=0):
         if "GET" == request.method:
+            if operation == "Edit":
+                return self.edit(request, id)
             return self.display(request)
         elif "POST" == request.method:
             if request.POST["operation"] == "delete":

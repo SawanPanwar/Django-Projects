@@ -28,3 +28,10 @@ def action(request, page=""):
         ctlObj = eval(ctlName)
         res = ctlObj.execute(request)
     return res
+
+def actionId(request, page="", operation="", id=0):
+    if request.session.get('user') is not None and page != "":
+        ctlName = page + "Ctl()"
+        ctlObj = eval(ctlName)
+        res = ctlObj.execute(request, operation, id)
+    return  res
