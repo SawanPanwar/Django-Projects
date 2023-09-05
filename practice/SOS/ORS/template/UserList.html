@@ -18,7 +18,12 @@
                            placeholder="Enter First Name"></td>
                 <td><input type="text" name="lastName"
                            placeholder="Enter Last Name"></td>
-                <td></td>
+                <td><select name="userId">
+                    <option  value="">------------Select------------</option>
+                    {% for user in preList %}
+                    <option value="{{ user.id }}">{{ user.firstName }}</option>
+                    {% endfor %}
+                </select></td>
                 <td><input type="submit" name="operation" value="search">
                 </td>
             </tr>

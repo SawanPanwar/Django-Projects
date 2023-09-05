@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 
 
 class BaseCtl(ABC):
+    preload_data = {}
+    page_list = {}
 
     @abstractmethod
     def display(self, request):
@@ -12,7 +14,11 @@ class BaseCtl(ABC):
     def submit(self, request):
         pass
 
+    def preload(self, request):
+        print("This is preload")
+
     def execute(self, request, operation="", id=0):
+        self.preload(request)
         if "GET" == request.method:
             if operation == "Edit":
                 return self.edit(request, id)

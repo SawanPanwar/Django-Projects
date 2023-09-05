@@ -40,7 +40,6 @@ class UserCtl(BaseCtl):
 
     def submit(self, request):
         self.request_to_form(request.POST)
-        print("submitttttttttttt=======",self.form["id"])
         s = self.form_to_model(User())
         self.get_service().save(s)
         return render(request, self.get_template(), {'form': self.form})

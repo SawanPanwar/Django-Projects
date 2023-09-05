@@ -14,17 +14,22 @@ class UserListCtl(BaseCtl):
         self.form['firstName'] = requestForm.get("firstName", None)
         self.form['ids'] = requestForm.getlist('ids', None)
 
+    def preload(self, request):
+        self.page_list = self.get_service().preload()
+        self.preload_data = self.page_list
+
     def display(self, request):
         record = self.get_service().search(self.form)
         data = record['data']
-        return render(request, self.get_template(), {"list": data, 'form': self.form})
+        return render(request, self.get_template(), {"list": data, 'form': self.form, 'preList':self.preload_data})
 
     def submit(self, request):
         self.form['firstName'] = request.POST["firstName"]
         self.form['lastName'] = request.POST["lastName"]
+        self.form['id'] = request.POST["userId"]
         record = self.get_service().search(self.form)
         data = record['data']
-        return render(request, self.get_template(), {"list": data, 'form': self.form})
+        return render(request, self.get_template(), {"list": data, 'form': self.form, 'preList':self.preload_data})
 
     def next(self, request):
         UserListCtl.count += 1
